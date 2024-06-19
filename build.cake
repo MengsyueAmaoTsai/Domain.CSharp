@@ -1,10 +1,12 @@
 var solution = "./RichillCapital.Domain.sln";
 var project = "./RichillCapital.Domain.csproj";
 var buildConfiguration = Argument("configuration", "Release");
+var artifactsDirectory = "./artifacts";
 
 Task("Clean")
     .Does(() =>
     {
+        CleanDirectory(artifactsDirectory);
         DotNetClean(solution);
     });
 
@@ -43,7 +45,13 @@ Task("UnitTests")
 Task("Pack")
     .Does(() =>
     {
-        DotNetPack(project);
+        DotNetPack(project, new DotNetPackSettings
+        {
+            Configuration = buildConfiguration,
+            NoBuild = true,
+            NoRestore = true,
+            OutputDirectory = artifactsDirectory,
+        });
     });
 
 Task("Default")
