@@ -29,3 +29,8 @@ jobs:
         arguments: |
           configuration: ${{ env.Build_Configuration }}
     
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: RichillCapital.Domain-${{ env.Build_Configuration }}
+        path: ./artifacts          
