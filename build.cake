@@ -43,6 +43,7 @@ Task("UnitTests")
 Task("Pack")
     .Does(() =>
     {
+        DotNetPack(project);
     });
 
 Task("Default")
