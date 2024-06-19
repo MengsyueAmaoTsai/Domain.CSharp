@@ -13,13 +13,17 @@ public sealed class UserTests
         var userId = UserId.NewUserId();
         var name = UserName.From("Meng Syue Tsai").Value;
         var email = Email.From("mengsyue.tsai@outlook.com").Value;
+        var passwordHash = "password-hash";
         var now = DateTimeOffset.UtcNow;
 
         ErrorOr<User> errorOrUser = User.Create(
-            userId,
-            name,
-            email,
+            id: userId,
+            name: name,
+            email: email,
             emailConfirmed: false,
+            passwordHash: passwordHash,
+            lockoutEnabled: false,
+            accessFailedCount: 0,
             createdAt: now);
 
         errorOrUser.IsValue.Should().BeTrue();
@@ -29,6 +33,9 @@ public sealed class UserTests
         user.Name.Should().Be(name);
         user.Email.Should().Be(email);
         user.EmailConfirmed.Should().BeFalse();
+        user.PasswordHash.Should().Be(passwordHash);
+        user.LockoutEnabled.Should().BeFalse();
+        user.AccessFailedCount.Should().Be(0);
         user.CreatedAt.Should().Be(now);
     }
 }
