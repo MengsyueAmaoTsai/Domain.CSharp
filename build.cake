@@ -1,7 +1,6 @@
 var solution = "./RichillCapital.Domain.sln";
 var project = "./RichillCapital.Domain.csproj";
 var buildConfiguration = Argument("configuration", "Release");
-var publishDirectory = "./publish";
 
 Task("Clean")
     .Does(() =>
@@ -28,11 +27,11 @@ Task("Build")
     });
 
 
-Task("ArchitectureTests")
+Task("UnitTests")
     .Does(() =>
     {
         DotNetTest(
-            "./Tests/RichillCapital.Api.ArchitectureTests",
+            "./Tests/RichillCapital.Domain.UnitTests",
             new DotNetTestSettings
             {
                 Configuration = buildConfiguration,
@@ -41,43 +40,17 @@ Task("ArchitectureTests")
             });
     });
 
-Task("AcceptanceTests")
+Task("Pack")
     .Does(() =>
     {
-        DotNetTest(
-            "./Tests/RichillCapital.Api.AcceptanceTests",
-            new DotNetTestSettings
-            {
-                Configuration = buildConfiguration,
-                NoBuild = true,
-                NoRestore = true,
-            });
-    });
-
-
-Task("Publish")
-    .Does(() =>
-    {
-        CleanDirectory(publishDirectory);
-
-        DotNetPublish(
-            project,
-            new DotNetPublishSettings
-            {
-                Configuration = buildConfiguration,
-                NoRestore = true,
-                NoBuild = true,
-                OutputDirectory = publishDirectory,
-            });
     });
 
 Task("Default")
     .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
-    .IsDependentOn("ArchitectureTests")
-    .IsDependentOn("AcceptanceTests")
-    .IsDependentOn("Publish");
+    .IsDependentOn("UnitTests")
+    .IsDependentOn("Pack");
 
 var target = Argument("target", "Default");
 RunTarget(target);
