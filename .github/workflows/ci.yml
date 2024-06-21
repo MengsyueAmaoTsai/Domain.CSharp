@@ -44,6 +44,6 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: ${{ env.PACKAGE_ID }}-${{ steps.version.outputs.version }}-${{ steps.nbgv.outputs.GitCommitIdShort }}-${{ env.Configuration }}
+        name: ${{ env.PACKAGE_ID }}-${{ steps.version.outputs.version }}-${{ env.Configuration }}
         path: ./artifacts          
 
