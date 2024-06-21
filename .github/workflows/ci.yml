@@ -1,36 +1,49 @@
-name: .NET Continuous Integration
+name: RichillCapital.Domain - Continuous Integration
 
 on:
   push:
-    branches: 
+    branches:
       - master
+      - dev
 
+  pull_request:
+    branches:
+      - master
+      - dev
 env:
-  Build_Configuration: Debug
-  Cake_File: build.cake
-  Build_Target: Default
+  PACKAGE_ID: RichillCapital.Domain
+  PROJECT_PATH: ./RichillCapital.Domain.csproj
+  CAKE_FILE_PATH: ./build.cake
+  TARGET: Default
+  CONFIGURATION: Debug
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-
+    runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v4
-          
-    - name: .NET Build and Test
+
+    - name: Use Nerdbank.GitVersioning
+      uses: dotnet/nbgv@master
+      id: nbgv
+
+    - name: Determine the Build Version
+      id: version
+      run: echo "::set-output name=version::$(git describe --tags --abbrev=0 || date +'%Y%m%d')-${{ steps.nbgv.outputs.GitCommitIdShort }}"
+
+    - name: .NET Build and Tests
       uses: cake-build/cake-action@v2
       with:
-        script-path: ${{ env.Cake_File }}
-        target: ${{ env.Build_Target }}
+        script-path: ${{ env.CAKE_FILE_PATH }}
+        target: ${{ env.TARGET }}
         verbosity: Diagnostic
         arguments: |
-          configuration: ${{ env.Build_Configuration }}
-    
+          configuration: ${{ env.CONFIGURATION }}
+      
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: RichillCapital.Domain-${{ env.Build_Configuration }}
+        name: ${{ env.PACKAGE_ID }}-${{ steps.version.outputs.version }}-${{ steps.nbgv.outputs.GitCommitIdShort }}-${{ env.Configuration }}
         path: ./artifacts          
+
