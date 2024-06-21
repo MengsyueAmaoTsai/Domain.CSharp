@@ -5,7 +5,7 @@ namespace RichillCapital.Domain.Users;
 
 public sealed class User : Entity<UserId>
 {
-    private readonly List<Account> _accounts = [];
+    private readonly HashSet<Account> _accounts = [];
 
     private User(
         UserId id,
@@ -41,7 +41,7 @@ public sealed class User : Entity<UserId>
 
     public DateTimeOffset CreatedAt { get; private set; }
 
-    public IReadOnlyList<Account> Accounts => _accounts;
+    public IReadOnlyList<Account> Accounts => _accounts.ToList();
 
     public static ErrorOr<User> Create(
         UserId id,
@@ -64,5 +64,12 @@ public sealed class User : Entity<UserId>
             createdAt: createdAt);
 
         return ErrorOr<User>.With(user);
+    }
+
+    public Result AddAccount(Account account)
+    {
+        _accounts.Add(account);
+
+        return Result.Success;
     }
 }

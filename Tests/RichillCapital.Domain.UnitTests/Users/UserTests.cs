@@ -38,4 +38,41 @@ public sealed class UserTests
         user.AccessFailedCount.Should().Be(0);
         user.CreatedAt.Should().Be(now);
     }
+
+    [Fact]
+    public void AddAccount_Should_ReturnSuccessResult()
+    {
+        var userId = UserId.NewUserId();
+        var name = UserName.From("Meng Syue Tsai").Value;
+        var email = Email.From("mengsyue.tsai@outlook.com").Value;
+        var passwordHash = "password-hash";
+        var now = DateTimeOffset.UtcNow;
+
+        User user = User
+            .Create(
+                id: userId,
+                name: name,
+                email: email,
+                emailConfirmed: false,
+                passwordHash: passwordHash,
+                lockoutEnabled: false,
+                accessFailedCount: 0,
+                createdAt: now)
+            .ThrowIfError()
+            .Value;
+
+        var account = Account
+            .Create(
+                AccountId.From("account-id").ThrowIfFailure().Value,
+                user.Id,
+                "account-name")
+            .ThrowIfError()
+            .Value;
+
+        var result = user.AddAccount(account);
+
+        result.IsSuccess.Should().BeTrue();
+        user.Accounts.Should().Contain(account);
+        user.Accounts.Count.Should().Be(1);
+    }
 }
