@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 
     <PackageId>RichillCapital.Domain</PackageId>
-    <Version>1.0.0.4</Version>
+    <Version>1.0.0.5</Version>
     <Description>Richill Capital Domain</Description>
     <Authors>Mengsyue Amao Tsai</Authors>
     <Company>Richill Capital</Company>
