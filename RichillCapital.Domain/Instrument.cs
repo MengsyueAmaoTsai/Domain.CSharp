@@ -5,14 +5,31 @@ namespace RichillCapital.Domain;
 
 public sealed class Instrument : Entity<Symbol>
 {
-    private Instrument(Symbol id)
-        : base(id)
+    private Instrument(
+        Symbol symbol,
+        string description,
+        string exchange)
+        : base(symbol)
     {
+        Description = description;
+        Exchange = exchange;
     }
 
-    public static ErrorOr<Instrument> Create(Symbol symbol)
+    public Symbol Symbol => Id;
+
+    public string Description { get; private set; }
+
+    public string Exchange { get; private set; }
+
+    public static ErrorOr<Instrument> Create(
+        Symbol symbol,
+        string description,
+        string exchange)
     {
-        var instrument = new Instrument(symbol);
+        var instrument = new Instrument(
+            symbol,
+            description,
+            exchange);
 
         return ErrorOr<Instrument>.With(instrument);
     }
