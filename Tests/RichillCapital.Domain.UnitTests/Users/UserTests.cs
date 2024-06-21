@@ -80,6 +80,8 @@ public sealed class UserTests
         var result1 = user.AddAccount(account1);
         var result2 = user.AddAccount(account2);
 
+        result1.IsSuccess.Should().BeTrue();
+        result2.IsSuccess.Should().BeFalse();
         user.Accounts.Should().HaveCount(1);
     }
 
