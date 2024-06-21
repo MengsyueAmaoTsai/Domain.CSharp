@@ -5,7 +5,7 @@ namespace RichillCapital.Domain.Users;
 
 public sealed class User : Entity<UserId>
 {
-    private readonly HashSet<Account> _accounts = [];
+    private readonly List<Account> _accounts = [];
 
     private User(
         UserId id,
@@ -68,6 +68,14 @@ public sealed class User : Entity<UserId>
 
     public Result AddAccount(Account account)
     {
+        if (_accounts.Any(acc => acc == account))
+        {
+            var error = Error
+                .Conflict("Users.AccountAlreadyExists", $"Account with id {account.Id} already exists.");
+
+            return Result.Failure(error);
+        }
+
         _accounts.Add(account);
 
         return Result.Success;

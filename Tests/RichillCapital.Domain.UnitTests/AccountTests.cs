@@ -10,7 +10,7 @@ public sealed class AccountTests
     [Fact]
     public void Create_Should_CreateAccount()
     {
-        var expectedAccountId = AccountId.From("1").ThrowIfFailure().Value;
+        var expectedAccountId = AccountId.From(Guid.NewGuid().ToString()).ThrowIfFailure().Value;
         var expectedUserId = UserId.From("UID0000001").ThrowIfFailure().Value;
         var expectedName = "Test account";
 

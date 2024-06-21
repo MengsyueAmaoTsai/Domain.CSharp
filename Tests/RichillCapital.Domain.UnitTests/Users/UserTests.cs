@@ -40,6 +40,50 @@ public sealed class UserTests
     }
 
     [Fact]
+    public void AddAccount_When_AccountAlreadyExists_Should_ReturnFailureResult()
+    {
+        var userId = UserId.NewUserId();
+        var name = UserName.From("Meng Syue Tsai").Value;
+        var email = Email.From("mengsyue.tsai@outlook.com").Value;
+        var passwordHash = "password-hash";
+        var now = DateTimeOffset.UtcNow;
+
+        User user = User
+            .Create(
+                id: userId,
+                name: name,
+                email: email,
+                emailConfirmed: false,
+                passwordHash: passwordHash,
+                lockoutEnabled: false,
+                accessFailedCount: 0,
+                createdAt: now)
+            .ThrowIfError()
+            .Value;
+
+        var account1 = Account
+            .Create(
+                AccountId.From("account-id").ThrowIfFailure().Value,
+                user.Id,
+                "account-name")
+            .ThrowIfError()
+            .Value;
+
+        var account2 = Account
+            .Create(
+                AccountId.From("account-id").ThrowIfFailure().Value,
+                user.Id,
+                "account-name")
+            .ThrowIfError()
+            .Value;
+
+        var result1 = user.AddAccount(account1);
+        var result2 = user.AddAccount(account2);
+
+        user.Accounts.Should().HaveCount(1);
+    }
+
+    [Fact]
     public void AddAccount_Should_ReturnSuccessResult()
     {
         var userId = UserId.NewUserId();
