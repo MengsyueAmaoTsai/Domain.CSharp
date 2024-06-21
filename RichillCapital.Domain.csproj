@@ -9,6 +9,10 @@
     <Version>1.0.0.4</Version>
     <Description>Richill Capital Domain</Description>
     <Authors>Mengsyue Amao Tsai</Authors>
+    <Company>Richill Capital</Company>
+    <Copyright>Copyright © 2024 Richill Capital</Copyright>    
+
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
   <ItemGroup>
