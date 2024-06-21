@@ -1,53 +1,47 @@
-var solution = "./RichillCapital.Domain.sln";
-var project = "./RichillCapital.Domain.csproj";
-var buildConfiguration = Argument("configuration", "Release");
-var artifactsDirectory = "./artifacts";
+var solutionPath = "./RichillCapital.Domain.sln";
+var projectPath = "./RichillCapital.Domain.csproj";
 
-Task("Clean")
-    .Does(() =>
-    {
-        CleanDirectory(artifactsDirectory);
-        DotNetClean(solution);
-    });
+var configuration = Argument("configuration", "Release");
+var artifactsDirectory = "./artifacts";
 
 Task("Restore")
     .Does(() =>
     {
-        DotNetRestore(solution);
+        DotNetRestore(solutionPath);
     });
 
 Task("Build")
     .Does(() =>
     {
-        DotNetBuild(
-            solution,
-            new DotNetBuildSettings
-            {
-                Configuration = buildConfiguration,
-                NoRestore = true,
-            });
+        DotNetBuild(solutionPath, new DotNetBuildSettings
+        {
+            Configuration = configuration,
+            NoRestore = true,
+        });
     });
-
 
 Task("UnitTests")
     .Does(() =>
     {
-        DotNetTest(
-            "./Tests/RichillCapital.Domain.UnitTests",
-            new DotNetTestSettings
+        var testProjects = GetFiles("./Tests/**/*.UnitTests.csproj");
+
+        foreach (var project in testProjects)
+        {
+            DotNetTest(project.FullPath, new DotNetTestSettings
             {
-                Configuration = buildConfiguration,
+                Configuration = configuration,
                 NoBuild = true,
                 NoRestore = true,
             });
+        }
     });
 
 Task("Pack")
     .Does(() =>
     {
-        DotNetPack(project, new DotNetPackSettings
+        DotNetPack(projectPath, new DotNetPackSettings
         {
-            Configuration = buildConfiguration,
+            Configuration = configuration,
             NoBuild = true,
             NoRestore = true,
             OutputDirectory = artifactsDirectory,
@@ -55,11 +49,11 @@ Task("Pack")
     });
 
 Task("Default")
-    .IsDependentOn("Clean")
     .IsDependentOn("Restore")
     .IsDependentOn("Build")
     .IsDependentOn("UnitTests")
     .IsDependentOn("Pack");
 
 var target = Argument("target", "Default");
+
 RunTarget(target);

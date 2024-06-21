@@ -1,4 +1,4 @@
-name: .NET Continuous Deployment
+name: RichillCapital.Domain - Continuous Deployment
 
 on:
   push:
@@ -6,28 +6,36 @@ on:
       - '*'
 
 env:
-  Build_Configuration: Release
-  Cake_File: build.cake
-  Build_Target: Default
+  PROJECT_PATH: ./RichillCapital.Domain.csproj
+  CAKE_FILE_PATH: ./build.cake
+  TARGET: Default
+  CONFIGURATION: Release
 
 jobs:
-  publish:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-
+  push-nuget:
+    runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v4
-          
-    - name: .NET Build and Test
+    
+    - name: Determine the Deploy Version
+      id: version
+      run: echo "::set-output name=version::$(git describe --tags --abbrev=0)"
+    
+    - name: Update Version
+      run: |
+        sudo apt-get install -y xmlstarlet
+        package_version=${{ steps.version.outputs.version }}
+        xmlstarlet ed --inplace -u "/Project/PropertyGroup/Version" -v "${package_version}" ${{ env.PROJECT_PATH }}
+        
+    - name: .NET Build and Tests
       uses: cake-build/cake-action@v2
       with:
-        script-path: ${{ env.Cake_File }}
-        target: ${{ env.Build_Target }}
+        script-path: ${{ env.CAKE_FILE_PATH }}
+        target: ${{ env.TARGET }}
         verbosity: Diagnostic
         arguments: |
-          configuration: ${{ env.Build_Configuration }}
+          configuration: ${{ env.Configuration }}
     
     - name: Push to NuGet Gallery
       run: |
