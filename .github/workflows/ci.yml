@@ -1,4 +1,4 @@
-name: RichillCapital.Domain - Continuous Integration
+name: RichillCapital.Domain CI
 
 on:
   push:
@@ -16,19 +16,23 @@ env:
   CAKE_FILE_PATH: ./build.cake
   TARGET: Default
   CONFIGURATION: Debug
+  ARTIFACTS_DIRECTORY: ./artifacts
 
 jobs:
   build:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v4
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Use Nerdbank.GitVersioning
       uses: dotnet/nbgv@master
       id: nbgv
 
-    - name: Determine the Build Version
+    - name: Get Version
       id: version
       run: echo "::set-output name=version::$(git describe --tags --abbrev=0 || date +'%Y%m%d')-${{ steps.nbgv.outputs.GitCommitIdShort }}"
 
@@ -45,5 +49,5 @@ jobs:
       uses: actions/upload-artifact@v2
       with:
         name: ${{ env.PACKAGE_ID }}-${{ steps.version.outputs.version }}-${{ env.Configuration }}
-        path: ./artifacts          
+        path: ${{ env.ARTIFACTS_DIRECTORY }}          
 
