@@ -65,7 +65,8 @@ public sealed class UserTests
             .Create(
                 AccountId.From("account-id").ThrowIfFailure().Value,
                 user.Id,
-                "account-name")
+                "account-name",
+                now)
             .ThrowIfError()
             .Value;
 
@@ -73,7 +74,8 @@ public sealed class UserTests
             .Create(
                 AccountId.From("account-id").ThrowIfFailure().Value,
                 user.Id,
-                "account-name")
+                "account-name",
+                now)
             .ThrowIfError()
             .Value;
 
@@ -111,7 +113,8 @@ public sealed class UserTests
             .Create(
                 AccountId.From("account-id").ThrowIfFailure().Value,
                 user.Id,
-                "account-name")
+                "account-name",
+                now)
             .ThrowIfError()
             .Value;
 

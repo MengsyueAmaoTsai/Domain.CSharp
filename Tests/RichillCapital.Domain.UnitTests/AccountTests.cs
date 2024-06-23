@@ -13,11 +13,13 @@ public sealed class AccountTests
         var expectedAccountId = AccountId.From(Guid.NewGuid().ToString()).ThrowIfFailure().Value;
         var expectedUserId = UserId.From("UID0000001").ThrowIfFailure().Value;
         var expectedName = "Test account";
+        var createdAt = DateTimeOffset.UtcNow;
 
         var errorOrAccount = Account.Create(
             expectedAccountId,
             expectedUserId,
-            expectedName);
+            expectedName,
+            createdAt);
 
         errorOrAccount.IsValue.Should().BeTrue();
 
@@ -25,5 +27,6 @@ public sealed class AccountTests
         account.Id.Should().Be(expectedAccountId);
         account.UserId.Should().Be(expectedUserId);
         account.Name.Should().Be(expectedName);
+        account.CreatedAt.Should().Be(createdAt);
     }
 }
