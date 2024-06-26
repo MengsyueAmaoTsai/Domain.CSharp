@@ -16,6 +16,8 @@ public sealed class SignalTests
         var symbol = "symbol";
         var quantity = 1;
         var price = 1;
+        var ipAddress = "1.1.1.1";
+        var latency = 1535;
 
         ErrorOr<Signal> errorOrSignal = Signal.Create(
             id: signalId,
@@ -24,7 +26,9 @@ public sealed class SignalTests
             exchange: exchange,
             symbol: symbol,
             quantity: quantity,
-            price: price);
+            price: price,
+            ipAddress: ipAddress,
+            latency: latency);
 
         errorOrSignal.IsValue.Should().BeTrue();
         var signal = errorOrSignal.Value;
@@ -35,5 +39,7 @@ public sealed class SignalTests
         signal.Symbol.Should().Be(symbol);
         signal.Quantity.Should().Be(quantity);
         signal.Price.Should().Be(price);
+        signal.IpAddress.Should().Be(ipAddress);
+        signal.Latency.Should().Be(latency);
     }
 }

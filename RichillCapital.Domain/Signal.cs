@@ -12,7 +12,9 @@ public sealed class Signal : Entity<SignalId>
         string exchange,
         string symbol,
         decimal quantity,
-        decimal price)
+        decimal price,
+        string ipAddress,
+        int latency)
         : base(id)
     {
         SourceId = sourceId;
@@ -21,6 +23,8 @@ public sealed class Signal : Entity<SignalId>
         Symbol = symbol;
         Quantity = quantity;
         Price = price;
+        IpAddress = ipAddress;
+        Latency = latency;
     }
 
     public string SourceId { get; private set; }
@@ -35,6 +39,10 @@ public sealed class Signal : Entity<SignalId>
 
     public decimal Price { get; private set; }
 
+    public string IpAddress { get; private set; }
+
+    public int Latency { get; private set; }
+
     public static ErrorOr<Signal> Create(
         SignalId id,
         string sourceId,
@@ -42,7 +50,9 @@ public sealed class Signal : Entity<SignalId>
         string exchange,
         string symbol,
         decimal quantity,
-        decimal price)
+        decimal price,
+        string ipAddress,
+        int latency)
     {
         var signal = new Signal(
             id,
@@ -51,7 +61,9 @@ public sealed class Signal : Entity<SignalId>
             exchange,
             symbol,
             quantity,
-            price);
+            price,
+            ipAddress,
+            latency);
 
         return ErrorOr<Signal>.With(signal);
     }
