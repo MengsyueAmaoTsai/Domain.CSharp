@@ -31,7 +31,7 @@ public sealed class SignalSource : Entity<SignalSourceId>
     {
         var signalSource = new SignalSource(
             id: id,
-            name: id.Value,
+            name: name,
             description: description,
             createdAt: createdAt);
 
