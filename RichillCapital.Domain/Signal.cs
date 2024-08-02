@@ -43,6 +43,9 @@ public sealed class Signal : Entity<SignalId>
 
     public int Latency { get; private set; }
 
+    // Navigation properties
+    public SignalSource Source { get; private set; }
+
     public static ErrorOr<Signal> Create(
         SignalId id,
         string sourceId,
